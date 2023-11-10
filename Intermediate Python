@@ -1,1 +1,378 @@
+# NumPy recap
+
+import numpy as np #pip install numpy
+
+np_height = np.array([1.73, 1.68, 1.71, 1.89, 1.79])
+np_weight = np.array([65.4, 59.2, 63.6, 88.4, 68.7])
+bmi = np_weight / np_height ** 2
+bmi
+print(bmi)
+
+# Comparison Operators
+
+x = 2
+y = 3
+x < y
+
+"carl" < "chris"
+
+# 3 < "chris" # error, py cannot tell how 2 different types relate
+True == 1 # Compare a boolean with an integer since True is 1
+
+## NumPy creates a np_array of the same size then do element-wise comparison
+bmi > 23 # return array of bool
+
+bmi[bmi > 23] # return array of elements satisfying cond
+
+my_house = np.array([18.0, 20.0, 10.75, 9.50])
+your_house = np.array([14.0, 24.0, 14.25, 9.0])
+
+# Distinct results w/ same cond on nu_array
+my_house[my_house >= 18] # limit results within the np_array
+print(my_house >= 18) # check each element within the np_array
+
+my_house[my_house < your_house]
+print(my_house < your_house)
+
+# Boolean Operators
+# And
+False and True
+x = 12; x < 5 and x > 10
+# Or
+True or False
+y = 5; y < 5 or y > 3
+
+# Use the bitwise & operator along with parentheses for each condition
+# bmi > 21 and bmi < 22 # ValueError
+mask = (bmi > 21) & (bmi < 22)
+print(mask)
+mask
+
+# Logical Operators for np_array
+np.logical_and(bmi > 21, bmi < 22) # And
+bmi[np.logical_and(bmi > 21, bmi < 22)]
+
+np.logical_or(bmi > 21, bmi < 22) 
+bmi[np.logical_or(bmi > 21, bmi < 22)] # OR
+np.logical_not(bmi > 21, bmi < 22) 
+bmi[np.logical_not(bmi > 21, bmi < 22)] # values not fall within [21,22]
+
+# Ex
+my_kitchen = 18.0
+your_kitchen = 14.0
+
+my_kitchen > 10 and my_kitchen < 18
+
+my_kitchen < 14 or my_kitchen > 17
+
+my_kitchen ** 2 < your_kitchen ** 3 # square and cube
+my_kitchen * 2 < your_kitchen * 3 # double and triple
+
+# Conditional Statements
+## 1. if
+"""
+    if condition:
+        expression
+        """
+# This utilizes python script named 'control.py'
+z = 6
+print("checking " + str(z))
+if z % 2 == 0: 
+    print("z is even")
+elif z % 3 == 0:
+    print("z is divisible by 3") # never reached when if executed
+else:
+    print("z is odd")
+
+# Filtering Pandas DataFrames using Comparison & Boolean Operators
+import pandas as pd
+"""
+brics = pd.read_csv("path/to/brics.csv", index_col=0)
+brics
+"""
+# Step 1 Get Panda Series rather than DataFrame
+"""
+brics["area"] # col, Series of area
+is_huge = brics["area"] > 8 # Series of bool
+"""
+# Step 2 Sub-setting
+"""
+brics[is_huge] # subset pd_df using cond is_huge
+"""
+
+"""
+cond = np.logical_and(brics["area"] > 8, brics["area"] < 10) # Series of bool
+brics[cond] # DataFrame sub-setted by cond
+"""
+
+# Pandas Series objects are essentially NumPy arrays
+## Use element-wise bool operations
+"""
+# Create medium: observations with cars_per_cap between 100 and 500
+cpc = cars['cars_per_cap'] # col cpc
+medium = cars[np.logical_and(cpc > 100, cpc < 500)]
+
+# Print medium
+print(medium)
+"""
+
+# Filtering Pandas DataFrames
+
+"""
+Get a Pandas Series not a DataFrame, 
+"""
+#------------------------------------------------------------
+### Define your CSV content as a string
+import pandas as pd
+from io import StringIO
+### Define your CSV content as a string
+csv_data = """
+country,capital,area,population
+Brazil,Brasilia, 8.516, 200.40
+Russia, Moscow, 17.100, 143.50
+India, New Delhi, 3.286, 1252.00
+China, Beijing, 9.597, 1357.00
+South Africa, Pretoria, 1.221, 52.98
+"""
+### Use StringIO to turn the string into a file-like object
+brics = StringIO(csv_data)
+### Read the CSV content using pandas
+brics = pd.read_csv(brics, index_col=None)
+print(brics.to_string(index=False))
+#------------------------------------------------------------
+## Step1 Get col
+brics['area'] ### brics.loc[:, 'area'] or brics.iloc[:,2]
+## Or use 2 Pandas Methods to access different segments of data
+brics.loc[:, 'area'] #label-based, ':' all rows
+brics.iloc[:,2] #index-based, ':' all rows
+
+## Step2 Compare
+brics['area'] > 8 # a Series of bools
+is_huge = brics['area'] > 8
+
+## Step3 Subset DF
+brics[is_huge] # Get the subsetted DF using is_huge as the index
+brics[brics['area'] > 8] # Simply write cond within the '[]'
+
+# While loop: continue to execute over and over again until particular cond is met
+## while_loop.py
+"""
+while condition:
+    expression
+"""
+error = 50
+while error > 1:
+    error = error / 4
+    print(error)
+
+# For loop
+## 1. Ex
+fam = [1.73, 1.68, 1.71, 1.89]
+enumerate(fam)# give index and values of a list
+
+for index, height in enumerate(fam) :
+    print("index " + str(index+1) + " : " + str(height))
+
+## 2. loop over string
+## strloop.py
+for c in "family":
+    print(c.capitalize())
+
+## 3. loop over Dictionary
+## dictloop.py
+world = {"afghanistan" : 30.55,
+         "albania" : 2.77,
+         "algeria" : 39.21}
+"""
+for key, value in world:
+    print(key + " -- " + str(value)) # ValueError: when you iterate over a dictionary directly using a for loop, you're only iterating over the keys, not the keys and values
+"""
+# Use items() just like enumerate() for lists
+for key, value in world.items():
+    print(key + " -- " + str(value))
+
+## 4. loop over NumPy arrrays
+## nploop.py
+###(1) 1-D
+import numpy as np #pip install numpy
+np_height = np.array([1.73, 1.68, 1.71, 1.89, 1.79])
+np_weight = np.array([65.4, 59.2, 63.6, 88.4, 68.7])
+bmi = np_weight / np_height ** 2
+for val in bmi:
+    print(val)
+
+###(2) 2-D
+meas = np.array([np_height, np_weight]) # build 2-D NumPy array
+meas
+for val in meas:
+    print(val)
+### print each value in 2-D to seq using np.nditer()
+meas = np.array([np_height, np_weight])
+for val in np.nditer(meas):
+    print(val)
+
+## 5. loop over pandas DataFrame
+
+# Define your CSV content as a string
+import pandas as pd
+from io import StringIO
+
+# Define your CSV content as a string
+csv_data = """
+country,capital,area,population
+Brazil,Brasilia, 8.516, 200.40
+Russia, Moscow, 17.100, 143.50
+India, New Delhi, 3.286, 1252.00
+China, Beijing, 9.597, 1357.00
+South Africa, Pretoria, 1.221, 52.98
+"""
+
+# Use StringIO to turn the string into a file-like object
+brics = StringIO(csv_data)
+
+# Read the CSV content using pandas
+brics = pd.read_csv(brics, index_col=None)
+print(brics.to_string(index=False))
+
+# Iterate over DataFrame obj is to iterate over col names (the 1st row) rather than observations
+for val in brics:
+    print(val)
+# Correct way to iterate over rows of DataFrame obj:
+## Use iterrows() within dfloop.py
+for index, row in brics.iterrows():
+    print(row['country'], row['capital'], row['area'], row['population'])
+
+for index, row in brics.iterrows():
+    print(index)
+    print(row) # row var on each iteration is a Series
+
+""" The row data that's generated by iterrows() on every run is a Pandas Series. 
+This format is not very convenient to print out. 
+Luckily, you can easily select variables from the Pandas Series using square brackets:
+"""
+
+for index, row in brics.iterrows():
+    print(index)
+    print(row['capital'])    
+
+## DataFrame Manipulation
+## (1) Add Col
+for index, row in brics.iterrows():
+    brics.loc[index, "name_length"] = len(row["country"]) #len() is func
+print(brics.to_string(index=False))
+
+for index, row in brics.iterrows():
+    brics.loc[index, "COUNTRY"] = row["country"].upper() #upper is method
+print(brics.to_string(index=False))
+
+## Alternative way using apply() rather than for loop
+brics['name_length']=brics['country'].apply(len) #call len() func within the apply()
+print(brics.to_string(index=False))
+###Slightly difference b/t func & method
+brics['COUNTRY']=brics['country'].apply(str.upper) #call upper() method within the apply()
+print(brics.to_string(index=False))
+
+#--------------------------------------------------------------
+#--------------------------------------------------------------
+
+# Random Numbers - Analytical (Simulate the Process "HAcker Statistics")
+## Empire State Building bet
+## 1 Random Generators -- 'rand' func within NumPy pkg
 import numpy as np
+np.random.rand() #Pseudo-random numbers
+np.random.seed(123)
+np.random.rand() # Randomly generate a float, Same seed same random nums
+### ensures reproducibility, others can reproduce my analysis
+
+## 2 Coin Toss
+np.random.seed(123) 
+coin = np.random.randint(0,2) # Randomly generate an int, here 0 or 1
+print(coin) # 0
+if coin == 0:
+    print("heads") 
+else:
+    print("tails")
+
+## Step1 Settings
+import numpy as np
+np.random.seed(123)
+step = 50
+## Step2 Roll the dice
+dice = np.random.randint(1, 7)
+print(dice)
+# Step3 Control construct
+if dice <= 2 :
+    step -= 1
+elif 3 <= dice <= 5 :
+    print(dice)
+    step += 1 
+else :
+    print(dice)
+    np.random.seed(123)
+    step += np.random.randint(1,7)
+print(step)
+
+#--------------------------------------------------------------
+#--------------------------------------------------------------
+# Random Walk:
+"""
+Examples:
+(1) the path traced by a molecule as it travels in a liquid or 
+    a gas can be modeled as a random walk.
+(2) Gambler's financial status
+Note: the current step should be based on the prev one
+
+The record every step in RW, need to know 
+    how to gradually build a list with a for loop.
+"""
+## Example: non-RW
+import numpy as np
+np.random.seed(123)
+outcomes=[]
+for x in range(10):
+    coin=np.random.randint(0,2)
+    if coin == 0:
+        outcomes.append("heads")
+    else:
+        outcomes.append("tails")
+print(outcomes)
+###Comment: just a bunch of random steps.
+
+## Example: Turns non-RW to RW by tracking the TOTAL num of tails
+import numpy as np
+np.random.seed(123)
+tails=[0] # Initialize Random Walk
+for x in range(10):
+    coin=np.random.randint(0,2)
+    tails.append(tails[x] + coin) # 1 reps tail
+print(tails)
+
+
+# Exercise: Random Walk
+import numpy as np
+np.random.seed(123)
+# Initialize random_walk
+random_walk = [0]
+# Construct Rules, make the next element determined by prev one
+for x in range(100) :
+    # Set step: last element in random_walk
+    step=random_walk[x]
+    # Roll the dice
+    dice = np.random.randint(1,7)
+    # Determine next step
+    if dice <= 2:
+        step = max(0, step - 1) # max() ensures step can't go below 0
+    elif dice <= 5:
+        step = step + 1
+    else:
+        step = step + np.random.randint(1,7)
+    # append next_step to random_walk
+    random_walk.append(step)
+
+# Print random_walk
+print(random_walk)
+
+# Plot the Random Walk
+import matplotlib.pyplot as plt
+plt.plot(random_walk)
+plt.show()
