@@ -376,3 +376,207 @@ print(random_walk)
 import matplotlib.pyplot as plt
 plt.plot(random_walk)
 plt.show()
+
+#--------------------------------------------------------------
+#--------------------------------------------------------------
+## Distribution - Simulate Multple Walks (multiple simple random walks)
+"""
+Simulate the 10-time toss experiment for 100 times, record the last 
+    num for each experiment, totally 100 nums, it's a distribution.
+
+To visualize a dist, use Histogram.
+"""
+import numpy as np
+np.random.seed(123)
+final_tails=[] # stores the last item for each RW during 100 simulations
+for x in range(100):
+    tails = [0] # RW
+    for x in range(10):
+        coin = np.random.randint(0,2)
+        tails.append(tails[x] + coin) # 1 reps tail
+    final_tails.append(tails[-1])
+print(tails)
+print(final_tails)
+
+## Histogram hist(x, bins=) func to visualize a Distribution
+import matplotlib.pyplot as plt
+plt.hist(final_tails, bins = 10)
+plt.show()
+
+
+
+### 1,000 times simulation
+import numpy as np
+np.random.seed(123)
+final_tails=[] # stores the last item for each RW during 100 simulations
+for x in range(1000):
+    tails = [0] # RW
+    for x in range(10):
+        coin = np.random.randint(0,2)
+        tails.append(tails[x] + coin) # 1 reps tail
+    final_tails.append(tails[-1])
+print(tails)
+print(final_tails)
+
+import matplotlib.pyplot as plt
+plt.hist(final_tails, bins = 10)
+plt.show()
+## 5,000 times simulation
+import numpy as np
+np.random.seed(123)
+final_tails=[] # stores the last item for each RW during 100 simulations
+for x in range(5000):
+    tails = [0] # RW
+    for x in range(10):
+        coin = np.random.randint(0,2)
+        tails.append(tails[x] + coin) # 1 reps tail
+    final_tails.append(tails[-1])
+print(tails)
+print(final_tails)
+
+import matplotlib.pyplot as plt
+plt.hist(final_tails, bins = 10)
+plt.show()
+
+### Comment: The distribution converges to Bell-Sahpe
+
+
+
+## Visualize 'all_walks' which is a list of lists
+"""
+Every sub-list rep a single random walk, 
+"""
+import numpy as np
+np.random.seed(123)
+## initialize and populate all_walks
+all_walks = []
+for i in range(5) :
+    random_walk = [0]
+    for x in range(100) :
+        step = random_walk[-1]
+        dice = np.random.randint(1,7)
+        if dice <= 2:
+            step = max(0, step - 1)
+        elif dice <= 5:
+            step = step + 1
+        else:
+            step = step + np.random.randint(1,7)
+        random_walk.append(step)
+    all_walks.append(random_walk)
+print(all_walks)
+import matplotlib.pyplot as plt
+plt.plot(all_walks)
+plt.show()
+#plt.clf()
+# Convert all_walks to NumPy array: np_aw
+np_aw = np.array(all_walks)
+
+# Plot np_aw and show
+plt.plot(np_aw)
+plt.show()
+
+# Clear the figure
+#plt.clf()
+
+"""
+Why we need Transpose:
+In Matplotlib, when you provide a 2D-array to the plot function, 
+    it plots the columns as separate data series by default, 
+    not the rows. This means that for each column in your 2D-array, 
+    Matplotlib will draw a separate line on the plot.
+
+
+"""
+
+# Transpose the np_aw array to make sure the rows 
+#   (individual walks) are plotted as separate lines
+np_aw_t = np_aw.T # OR np_aw_t = np.transpose(np_aw)
+
+# Plot the transposed array
+plt.plot(np_aw_t) 
+plt.show()
+
+
+# Introduce a new Random factor - clumsiness(falling down to 0)
+"""
+Add another factor that represents the chance of falling down. 
+    This is simulated by introducing a new random event that 
+    has a 0.5% (or 0.005 probability) chance of occurring.
+"""
+## numpy and matplotlib imported, seed set
+import numpy as np
+import matplotlib.pyplot as plt
+np.random.seed(123)
+## clear the plot so it doesn't get cluttered if you run this many times
+###plt.clf()
+
+## Simulate random walk 20 times
+all_walks = []
+for i in range(20) :
+    random_walk = [0]
+    for x in range(100) :
+        step = random_walk[-1]
+        dice = np.random.randint(1,7)
+        if dice <= 2:
+            step = max(0, step - 1)
+        elif dice <= 5:
+            step = step + 1
+        else:
+            step = step + np.random.randint(1,7)
+
+        # Implement clumsiness
+        if np.random.rand() <= 0.005:
+            step = 0
+
+        random_walk.append(step)
+    all_walks.append(random_walk)
+
+## Create and plot np_aw_t
+np_aw_t = np.transpose(np.array(all_walks))
+plt.plot(np_aw_t)
+plt.grid(True)
+plt.xlabel('Numer of Steps')
+plt.ylabel('Position')
+plt.show()
+
+
+
+# Plot Distribution - Simulate for 500 times
+# numpy and matplotlib imported, seed set
+import numpy as np
+import matplotlib.pyplot as plt
+np.random.seed(123)
+# Simulate random walk 500 times
+all_walks = []
+for i in range(500) :
+    random_walk = [0]
+    for x in range(100) :
+        step = random_walk[-1]
+        dice = np.random.randint(1,7)
+        if dice <= 2:
+            step = max(0, step - 1)
+        elif dice <= 5:
+            step = step + 1
+        else:
+            step = step + np.random.randint(1,7)
+        if np.random.rand() <= 0.001 :
+            step = 0
+        random_walk.append(step)
+    all_walks.append(random_walk)
+
+# Create and plot np_aw_t
+np_aw_t = np.transpose(np.array(all_walks))
+plt.plot(np_aw_t)
+plt.show()
+
+
+# Select last row from np_aw_t: ends
+ends = np_aw_t[-1,]
+
+# Plot histogram of ends, display plot
+plt.hist(ends, bins=20)
+plt.show()
+
+## estimate the chance of reaching at least 60 steps
+np.sum(ends > 60) / 500
+
